@@ -129,6 +129,14 @@ const DashboardPage = () => {
                   Create Note
                 </Button>
               </div>
+              <style jsx>{`
+                :global([data-radix-dialog-content] button[aria-label="Close"]) {
+                  color: #374151 !important;
+                }
+                :global([data-radix-dialog-content] button[aria-label="Close"]:hover) {
+                  color: #111827 !important;
+                }
+              `}</style>
             </DialogContent>
           </Dialog>
         </div>

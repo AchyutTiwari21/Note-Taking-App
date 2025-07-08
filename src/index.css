@@ -133,3 +133,12 @@ button:focus-visible {
     @apply bg-background text-foreground;
   }
 }
+
+/* Dialog close button styling for better contrast */
+[data-radix-dialog-content] button[aria-label="Close"] {
+  color: #374151 !important;
+}
+
+[data-radix-dialog-content] button[aria-label="Close"]:hover {
+  color: #111827 !important;
+}
