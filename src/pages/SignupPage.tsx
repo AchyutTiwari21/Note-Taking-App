@@ -12,7 +12,7 @@ const SignupPage = () => {
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
-    dateOfBirth: '',
+    dob: '',
     otp: ''
   });
   const [isOTPSent, setIsOTPSent] = useState(false);
@@ -49,14 +49,14 @@ const SignupPage = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.fullName || !formData.email || !formData.dateOfBirth || !formData.otp) {
+    if (!formData.fullName || !formData.email || !formData.dob || !formData.otp) {
       toast.error('Please fill in all fields');
       return;
     }
 
     setIsLoading(true);
     try {
-      const success = await signup(formData.fullName, formData.email, formData.dateOfBirth, formData.otp);
+      const success = await signup(formData.fullName, formData.email, formData.dob, formData.otp);
       if (success) {
         toast.success('Account created successfully!');
         navigate('/dashboard');
@@ -130,10 +130,10 @@ const SignupPage = () => {
               <div className="relative">
                 <Calendar className="absolute left-3 top-3 h-4 w-4 text-gray-400" />
                 <Input
-                  id="dateOfBirth"
-                  name="dateOfBirth"
+                  id="dob"
+                  name="dob"
                   type="date"
-                  value={formData.dateOfBirth}
+                  value={formData.dob}
                   onChange={handleInputChange}
                   className="pl-10"
                   required

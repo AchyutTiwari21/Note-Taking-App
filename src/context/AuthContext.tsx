@@ -1,16 +1,16 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
 interface User {
-  id: string;
+  _id: string;
   fullName: string;
   email: string;
-  dateOfBirth: string;
+  dob: string;
 }
 
 interface AuthContextType {
   user: User | null;
   login: (email: string, otp: string) => Promise<boolean>;
-  signup: (fullName: string, email: string, dateOfBirth: string, otp: string) => Promise<boolean>;
+  signup: (fullName: string, email: string, dob: string, otp: string) => Promise<boolean>;
   logout: () => void;
   sendOTP: (email: string) => Promise<boolean>;
   isAuthenticated: boolean;
@@ -51,10 +51,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     
     if (otp === '123456') {
       const mockUser: User = {
-        id: '1',
+        _id: '1',
         fullName: 'John Doe',
         email: email,
-        dateOfBirth: '1990-01-01'
+        dob: '1990-01-01'
       };
       
       setUser(mockUser);
@@ -65,16 +65,16 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return false;
   };
 
-  const signup = async (fullName: string, email: string, dateOfBirth: string, otp: string): Promise<boolean> => {
+  const signup = async (fullName: string, email: string, dob: string, otp: string): Promise<boolean> => {
     // Mock signup validation
     await new Promise(resolve => setTimeout(resolve, 1000));
     
     if (otp === '123456') {
       const newUser: User = {
-        id: Date.now().toString(),
+        _id: Date.now().toString(),
         fullName,
         email,
-        dateOfBirth
+        dob
       };
       
       setUser(newUser);
