@@ -43,7 +43,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Mock OTP sending
     try {
       await authService.sendOtp(email);
-      console.log(`OTP sent to ${email}`);
       return true;
     } catch (error: any) {
       console.error("Error sending OTP:", error);
@@ -71,7 +70,6 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       } 
       return false;
     } catch (error: any) {
-      console.log("Login failed", error.message);
       throw new Error(error.message || 'Login failed');
     }
   };
@@ -80,7 +78,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     // Mock signup validation
     try {
       const userData = await authService.createAccount({ fullName, email, otp, dob });
-      
+
       if (userData) {
         const newUser: User = {
           _id: userData._id,

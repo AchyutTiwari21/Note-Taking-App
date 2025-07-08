@@ -16,7 +16,7 @@ export class AuthService {
             const data = await response.json();
 
             if(!response.ok) {
-                throw new Error(data.error || 'Error while sending OTP.');
+                throw new Error(data.message || 'Error while sending OTP.');
             } else {
                 return true;
             }   
@@ -41,7 +41,7 @@ export class AuthService {
             const data = await response.json();
 
             if(!response.ok) {
-                throw new Error(data.error || 'Error while creating Account.');
+                throw new Error(data.message || 'Error while creating Account.');
             } else {
                 const userData = await this.login({email, otp});
                 if(userData) return userData;
@@ -67,9 +67,9 @@ export class AuthService {
             const data = await response.json();
 
             if(!response.ok) {
-                throw new Error(data.error || 'Invalid email or OTP.');
+                throw new Error(data.message || 'Invalid email or OTP.');
             } else {
-                return data.user;
+                return data.data;
             }   
 
         } catch(error) {
@@ -88,7 +88,7 @@ export class AuthService {
             const data = await response.json();
 
             if(!response.ok) {
-                throw new Error(data.error || 'Error while logging out');
+                throw new Error(data.message || 'Error while logging out');
             } else {
                 return true;
             }
