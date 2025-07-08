@@ -38,9 +38,9 @@ const SignupPage = () => {
     try {
       await sendOTP(formData.email);
       setIsOTPSent(true);
-      toast.success('OTP sent to your email! Use 123456 for demo.');
-    } catch (error) {
-      toast.error('Failed to send OTP. Please try again.');
+      toast.success('OTP sent to your email!');
+    } catch (error: any) {
+      toast.error(error.message || 'Failed to send OTP. Please try again.');
     } finally {
       setOtpLoading(false);
     }
@@ -63,8 +63,8 @@ const SignupPage = () => {
       } else {
         toast.error('Invalid OTP. Please try again.');
       }
-    } catch (error) {
-      toast.error('Signup failed. Please try again.');
+    } catch (error: any) {
+      toast.error(error.message || 'Signup failed. Please try again.');
     } finally {
       setIsLoading(false);
     }

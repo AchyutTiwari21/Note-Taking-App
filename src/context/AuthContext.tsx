@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
+import authService from '@/backend-api/auth';
 
 interface User {
   _id: string;
@@ -11,7 +12,7 @@ interface AuthContextType {
   user: User | null;
   login: (email: string, otp: string) => Promise<boolean>;
   signup: (fullName: string, email: string, dob: string, otp: string) => Promise<boolean>;
-  logout: () => void;
+  logout: () => Promise<void>;
   sendOTP: (email: string) => Promise<boolean>;
   isAuthenticated: boolean;
 }
@@ -40,55 +41,80 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const sendOTP = async (email: string): Promise<boolean> => {
     // Mock OTP sending
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    console.log(`OTP sent to ${email}: 123456`);
-    return true;
+    try {
+      await authService.sendOtp(email);
+      console.log(`OTP sent to ${email}`);
+      return true;
+    } catch (error: any) {
+      console.error("Error sending OTP:", error);
+      throw new Error(error.message || 'Failed to send OTP');
+    }
   };
 
   const login = async (email: string, otp: string): Promise<boolean> => {
-    // Mock login validation
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    if (otp === '123456') {
-      const mockUser: User = {
-        _id: '1',
-        fullName: 'John Doe',
-        email: email,
-        dob: '1990-01-01'
-      };
+    try {
+      // Mock login validation
+      const userData = await authService.login({ email, otp });
       
-      setUser(mockUser);
-      setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(mockUser));
-      return true;
+      if (userData) {
+        const user: User = {
+          _id: userData._id,
+          fullName: userData.fullName,
+          email: userData.email,
+          dob: userData.dob
+        };
+        
+        setUser(user);
+        setIsAuthenticated(true);
+        localStorage.setItem('user', JSON.stringify(user));
+        return true;
+      } 
+      return false;
+    } catch (error: any) {
+      console.log("Login failed", error.message);
+      throw new Error(error.message || 'Login failed');
     }
-    return false;
   };
 
   const signup = async (fullName: string, email: string, dob: string, otp: string): Promise<boolean> => {
     // Mock signup validation
-    await new Promise(resolve => setTimeout(resolve, 1000));
-    
-    if (otp === '123456') {
-      const newUser: User = {
-        _id: Date.now().toString(),
-        fullName,
-        email,
-        dob
-      };
+    try {
+      const userData = await authService.createAccount({ fullName, email, otp, dob });
       
-      setUser(newUser);
-      setIsAuthenticated(true);
-      localStorage.setItem('user', JSON.stringify(newUser));
-      return true;
+      if (userData) {
+        const newUser: User = {
+          _id: userData._id,
+          fullName: userData.fullName,
+          email: userData.email,
+          dob: userData.dob
+        };
+        
+        setUser(newUser);
+        setIsAuthenticated(true);
+        localStorage.setItem('user', JSON.stringify(newUser));
+        return true;
+      }
+      return false;
+    } catch (error: any) {
+      console.log("Signup failed", error.message);
+      throw new Error(error.message || 'Signup failed');  
     }
-    return false;
   };
 
-  const logout = () => {
-    setUser(null);
-    setIsAuthenticated(false);
-    localStorage.removeItem('user');
+  const logout = async (): Promise<void> => {
+    try {
+      const isLogout = await authService.logout();
+      if (isLogout) {
+        setUser(null);
+        setIsAuthenticated(false);
+        localStorage.removeItem('user');
+      } else {
+        throw new Error('Logout failed');
+      }
+    } catch (error: any) {
+      console.error('Error during logout:', error);
+      throw new Error(error.message || 'Logout failed');
+    }
   };
 
   return (
