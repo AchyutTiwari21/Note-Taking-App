@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, Dispatch, SetStateAction } from 'react';
+import React, { createContext, useContext, useState, Dispatch, SetStateAction } from 'react';
 import noteService from '@/backend-api/note';
 
 export interface Note {
@@ -37,58 +37,8 @@ export const useNotes = () => {
   return context;
 };
 
-const mockNotes: Note[] = [
-  {
-    _id: '1',
-    title: 'Project Planning',
-    content: 'Need to finalize the project requirements and create a detailed timeline. Should include milestones for each phase of development.',
-    preview: 'Need to finalize the project requirements and create a detailed timeline...',
-    createdAt: new Date('2024-01-15'),
-    updatedAt: new Date('2024-01-15')
-  },
-  {
-    _id: '2',
-    title: 'Meeting Notes',
-    content: 'Team meeting discussed new features, budget allocation, and upcoming deadlines. Action items: Review design mockups, Set up development environment, Schedule client presentation.',
-    preview: 'Team meeting discussed new features, budget allocation, and upcoming deadlines...',
-    createdAt: new Date('2024-01-14'),
-    updatedAt: new Date('2024-01-14')
-  },
-  {
-    _id: '3',
-    title: 'Reading List',
-    content: 'Books to read: "The Design of Everyday Things" by Don Norman, "Atomic Habits" by James Clear, "Clean Code" by Robert Martin.',
-    preview: 'Books to read: "The Design of Everyday Things" by Don Norman...',
-    createdAt: new Date('2024-01-13'),
-    updatedAt: new Date('2024-01-13')
-  }
-];
-
 export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [notes, setNotes] = useState<Note[]>(mockNotes);
-
-  useEffect(() => {
-
-    (async () => {
-      try {
-        const noteResponse: NoteRespone[] = await noteService.getNotes();
-
-        if(noteResponse) {
-          const noteData = noteResponse.map(note => {
-            return {...note, preview: note.content.substring(0, 100) + (note.content.length > 100 ? '...' : '')}
-          })
-          setNotes(noteData);
-        }
-      } catch (error: any) {
-        console.log(error.message || "Error while fetching notes.");
-        throw error;
-      }
-    })();
-  }, []);
-
-  useEffect(() => {
-    localStorage.setItem('notes', JSON.stringify(notes));
-  }, [notes]);
+  const [notes, setNotes] = useState<Note[]>([]);
 
   const addNote = async (title: string, content: string) => {
     const newNote: Note = {
@@ -108,6 +58,7 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
         throw new Error("Error while adding note!");
     } catch (error: any) {
       console.log(error.message);
+      throw new Error(error.message || "Error while adding note.");
     }
   };
 
@@ -128,10 +79,11 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
           : note
         ));
       } else {
-        throw new Error("Error while updating note.")
+        throw new Error("Error while updating note.");
       }
     } catch (error: any) {
       console.log(error.message);
+      throw new Error(error.message || "Error while updating note.");
     }
 
   };
@@ -147,6 +99,7 @@ export const NotesProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       }
     } catch (error: any) {
       console.log(error.message);
+      throw new Error(error.message || "Error while deleting note.");
     }
   };
 

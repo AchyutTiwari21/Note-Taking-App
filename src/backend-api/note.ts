@@ -29,7 +29,7 @@ export class NoteService {
       
     async getNotes() {
         try {
-            const response = await fetch(`${config.LOCAL_API_URL}/api/v1/note/get-note`, {
+            const response = await fetch(`${config.LOCAL_API_URL}/api/v1/note/get-notes`, {
                 method: 'GET',
                 credentials: 'include',
             });

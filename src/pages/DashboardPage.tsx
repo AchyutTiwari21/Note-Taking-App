@@ -6,17 +6,21 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
-import { PenTool, Plus, Search, LogOut, Calendar, Edit3 } from 'lucide-react';
+import { PenTool, Plus, Search, LogOut, Edit3, Calendar } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
-import { useNotes } from '@/context/NotesContext';
+import { useNotes, NoteRespone } from '@/context/NotesContext';
 import { toast } from 'sonner';
+import noteService from '@/backend-api/note';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 
 const DashboardPage = () => {
   const { user, logout, isAuthenticated } = useAuth();
-  const { notes, addNote } = useNotes();
+  const { notes, setNotes, addNote } = useNotes();
   const [searchTerm, setSearchTerm] = useState('');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newNote, setNewNote] = useState({ title: '', content: '' });
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -25,20 +29,48 @@ const DashboardPage = () => {
     }
   }, [isAuthenticated, navigate]);
 
-  const handleLogout = () => {
-    logout();
+  useEffect(() => {
+    NProgress.configure({ showSpinner: false });
+    (async () => {
+      NProgress.start();
+      try {
+        const noteResponse: NoteRespone[] = await noteService.getNotes();
+
+        if(noteResponse) {
+          const noteData = noteResponse.map(note => {
+            return {...note, preview: note.content.substring(0, 100) + (note.content.length > 100 ? '...' : '')}
+          })
+          setNotes(noteData);
+        }
+      } 
+      catch (error: any) {
+        console.log(error.message || "Error while fetching notes.");
+        throw error;
+      }
+      finally {
+        setLoading(false);
+        NProgress.done();
+      }
+    })();
+  }, []);
+
+  const handleLogout = async () => {
+    NProgress.start();
+    await logout();
+    NProgress.done();
     toast.success('Logged out successfully');
     navigate('/');
   };
 
-  const handleCreateNote = () => {
+  const handleCreateNote = async () => {
     if (!newNote.title.trim() || !newNote.content.trim()) {
       toast.error('Please fill in both title and content');
       return;
     }
-
+    
     try {
-      addNote(newNote.title, newNote.content);
+      NProgress.start();
+      await addNote(newNote.title, newNote.content);
       toast.success('Note created successfully!');
     } 
     catch (error:any) {
@@ -48,6 +80,7 @@ const DashboardPage = () => {
     finally {
       setNewNote({ title: '', content: '' });
       setIsCreateDialogOpen(false);
+      NProgress.done()
     }
   };
 
@@ -58,6 +91,10 @@ const DashboardPage = () => {
 
   if (!isAuthenticated) {
     return null;
+  }
+
+  if(loading) {
+    return <div className='w-full h-screen items-center justify-center'>Loading...</div>
   }
 
   return (
@@ -193,7 +230,9 @@ const DashboardPage = () => {
                     </p>
                     <div className="flex items-center text-xs text-gray-500 space-x-2">
                       <Calendar className="w-3 h-3" />
-                      <span>{note.updatedAt.toLocaleDateString()}</span>
+                      <span>
+                         {new Date(note.updatedAt).toLocaleDateString()}
+                      </span>
                     </div>
                   </CardContent>
                 </Link>

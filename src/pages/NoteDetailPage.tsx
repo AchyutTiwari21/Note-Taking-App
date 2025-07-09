@@ -11,6 +11,8 @@ import { ArrowLeft, Edit3, Trash2, Calendar, PenTool } from 'lucide-react';
 import { useNotes } from '@/context/NotesContext';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 
 const NoteDetailPage = () => {
   const { id } = useParams<{ id: string }>();
@@ -42,22 +44,43 @@ const NoteDetailPage = () => {
     });
   }, [note, isAuthenticated, navigate]);
 
-  const handleEdit = () => {
+  const handleEdit = async () => {
     if (!editForm.title.trim() || !editForm.content.trim()) {
       toast.error('Please fill in both title and content');
       return;
     }
 
-    updateNote(id!, editForm.title, editForm.content);
-    setNote(getNoteById(id!));
-    setIsEditDialogOpen(false);
-    toast.success('Note updated successfully!');
+    NProgress.start();
+    try {
+      await updateNote(id!, editForm.title, editForm.content);
+      setNote((prev) => { 
+        if(prev === undefined)
+          return undefined;
+        return {...prev, title: editForm.title, content: editForm.content}
+      });
+      
+      toast.success('Note updated successfully!');
+    } 
+    catch (error: any) {
+      toast.error(error.message || "Error while updating note.");
+    }
+    finally {
+      setIsEditDialogOpen(false);
+      NProgress.done();
+    }
   };
 
-  const handleDelete = () => {
-    deleteNote(id!);
-    toast.success('Note deleted successfully!');
-    navigate('/dashboard');
+  const handleDelete = async () => {
+    NProgress.start();
+    try {
+      await deleteNote(id!);
+      toast.success('Note deleted successfully!');
+      navigate('/dashboard');
+    } catch (error: any) {
+      toast.error(error.message || "Error while deleting notes.")
+    } finally {
+      NProgress.done();
+    }
   };
 
   if (!isAuthenticated || !note) {
@@ -170,12 +193,12 @@ const NoteDetailPage = () => {
             <div className="flex items-center text-sm text-gray-500 space-x-4">
               <div className="flex items-center space-x-2">
                 <Calendar className="w-4 h-4" />
-                <span>Created: {note.createdAt.toLocaleDateString()}</span>
+                <span>Created: {new Date(note.updatedAt).toLocaleDateString()}</span>
               </div>
-              {note.updatedAt.getTime() !== note.createdAt.getTime() && (
+              {new Date(note.updatedAt).getTime() !== new Date(note.createdAt).getTime() && (
                 <div className="flex items-center space-x-2">
                   <Edit3 className="w-4 h-4" />
-                  <span>Updated: {note.updatedAt.toLocaleDateString()}</span>
+                  <span>Updated: {new Date(note.updatedAt).toLocaleDateString()}</span>
                 </div>
               )}
             </div>
