@@ -42,10 +42,13 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   const sendOTP = async (email: string): Promise<boolean> => {
     // Mock OTP sending
     try {
-      await authService.sendOtp(email);
-      return true;
+      const isOTPSent = await authService.sendOtp(email);
+      if(isOTPSent)
+        return true;
+      else 
+        return false;
     } catch (error: any) {
-      console.error("Error sending OTP:", error);
+      console.error("Error sending OTP:", error.message);
       throw new Error(error.message || 'Failed to send OTP');
     }
   };

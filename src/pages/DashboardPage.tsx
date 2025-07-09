@@ -37,10 +37,18 @@ const DashboardPage = () => {
       return;
     }
 
-    addNote(newNote.title, newNote.content);
-    setNewNote({ title: '', content: '' });
-    setIsCreateDialogOpen(false);
-    toast.success('Note created successfully!');
+    try {
+      addNote(newNote.title, newNote.content);
+      toast.success('Note created successfully!');
+    } 
+    catch (error:any) {
+      toast.error(error.message);
+      return;
+    } 
+    finally {
+      setNewNote({ title: '', content: '' });
+      setIsCreateDialogOpen(false);
+    }
   };
 
   const filteredNotes = notes.filter(note =>
@@ -129,7 +137,7 @@ const DashboardPage = () => {
                   Create Note
                 </Button>
               </div>
-              <style jsx>{`
+              <style>{`
                 :global([data-radix-dialog-content] button[aria-label="Close"]) {
                   color: #374151 !important;
                 }
@@ -169,8 +177,8 @@ const DashboardPage = () => {
             </div>
           ) : (
             filteredNotes.map((note) => (
-              <Card key={note.id} className="hover:shadow-lg transition-shadow duration-200 cursor-pointer">
-                <Link to={`/note/${note.id}`}>
+              <Card key={note._id} className="hover:shadow-lg transition-shadow duration-200 cursor-pointer">
+                <Link to={`/note/${note._id}`}>
                   <CardHeader className="pb-3">
                     <div className="flex items-start justify-between">
                       <CardTitle className="text-lg font-semibold text-gray-900 line-clamp-2">

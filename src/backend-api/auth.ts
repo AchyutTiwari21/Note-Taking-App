@@ -69,7 +69,7 @@ export class AuthService {
             if(!response.ok) {
                 throw new Error(data.message || 'Invalid email or OTP.');
             } else {
-                return data.data;
+                return data.data.user;
             }   
 
         } catch(error) {
