@@ -7,6 +7,8 @@ import { Label } from '@/components/ui/label';
 import { PenTool, Mail, User, Calendar, Shield, ArrowLeft } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { toast } from 'sonner';
+import NProgress from 'nprogress';
+import 'nprogress/nprogress.css';
 
 const SignupPage = () => {
   const [formData, setFormData] = useState({
@@ -35,6 +37,7 @@ const SignupPage = () => {
     }
 
     setOtpLoading(true);
+    NProgress.start();
     try {
       await sendOTP(formData.email);
       setIsOTPSent(true);
@@ -43,6 +46,7 @@ const SignupPage = () => {
       toast.error(error.message || 'Failed to send OTP. Please try again.');
     } finally {
       setOtpLoading(false);
+      NProgress.done();
     }
   };
 
@@ -55,6 +59,7 @@ const SignupPage = () => {
     }
 
     setIsLoading(true);
+    NProgress.start();
     try {
       const success = await signup(formData.fullName, formData.email, formData.dob, formData.otp);
       if (success) {
@@ -67,6 +72,7 @@ const SignupPage = () => {
       toast.error(error.message || 'Signup failed. Please try again.');
     } finally {
       setIsLoading(false);
+      NProgress.done();
     }
   };
 

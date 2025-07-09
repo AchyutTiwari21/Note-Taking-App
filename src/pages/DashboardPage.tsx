@@ -20,7 +20,6 @@ const DashboardPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newNote, setNewNote] = useState({ title: '', content: '' });
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -48,7 +47,6 @@ const DashboardPage = () => {
         throw error;
       }
       finally {
-        setLoading(false);
         NProgress.done();
       }
     })();
@@ -93,10 +91,6 @@ const DashboardPage = () => {
     return null;
   }
 
-  if(loading) {
-    return <div className='w-full h-screen items-center justify-center'>Loading...</div>
-  }
-
   return (
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
@@ -115,7 +109,7 @@ const DashboardPage = () => {
                 onClick={handleLogout}
                 className="flex items-center space-x-2"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut className="w-5 h-5" />
                 <span className="hidden md:inline">Logout</span>
               </Button>
             </div>

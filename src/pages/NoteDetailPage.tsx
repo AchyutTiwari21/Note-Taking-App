@@ -91,7 +91,7 @@ const NoteDetailPage = () => {
     <div className="min-h-screen bg-gray-50">
       {/* Header */}
       <header className="bg-white shadow-sm border-b">
-        <div className="container mx-auto px-4 py-4">
+        <div className="container mx-auto px-4 py-4 md:px-0">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-4">
               <Link to="/dashboard">
@@ -105,11 +105,11 @@ const NoteDetailPage = () => {
                 <span className="hidden md:inline text-xl font-bold text-gray-900">NoteTaker</span>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
+            <div className="flex items-center space-x-4">
               <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
                 <DialogTrigger asChild>
                   <Button variant="outline" size="sm" className="flex items-center space-x-2">
-                    <Edit3 className="w-4 h-4" />
+                    <Edit3 className="w-5 h-5" />
                     <span className="hidden md:inline">Edit</span>
                   </Button>
                 </DialogTrigger>
@@ -156,7 +156,7 @@ const NoteDetailPage = () => {
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button variant="outline" size="sm" className="flex items-center space-x-2 text-red-600 hover:text-red-700">
-                    <Trash2 className="w-4 h-4" />
+                    <Trash2 className="w-5 h-5" />
                     <span className="hidden md:inline">Delete</span>
                   </Button>
                 </AlertDialogTrigger>
