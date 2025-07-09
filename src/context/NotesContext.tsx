@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, Dispatch, SetStateAction } from 'react';
-import noteService from '@/backend-api/note';
+import noteService from '@/services/note';
 
 export interface Note {
   _id: string;

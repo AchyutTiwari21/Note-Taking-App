@@ -10,7 +10,7 @@ import { PenTool, Plus, Search, LogOut, Edit3, Calendar } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useNotes, NoteRespone } from '@/context/NotesContext';
 import { toast } from 'sonner';
-import noteService from '@/backend-api/note';
+import noteService from '@/services/note';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
