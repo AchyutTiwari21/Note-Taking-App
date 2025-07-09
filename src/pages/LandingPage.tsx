@@ -11,7 +11,7 @@ const LandingPage = () => {
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
             <PenTool className="w-8 h-8 text-blue-600" />
-            <span className="text-2xl font-bold text-gray-900">NoteTaker</span>
+            <span className="hidden md:inline md:text-2xl md:font-bold md:text-gray-900">NoteTaker</span>
           </div>
           <div className="flex space-x-4">
             <Link to="/signin">

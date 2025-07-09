@@ -104,8 +104,8 @@ const DashboardPage = () => {
         <div className="container mx-auto px-4 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-2">
-              <PenTool className="w-8 h-8 text-blue-600" />
-              <span className="text-2xl font-bold text-gray-900">NoteTaker</span>
+              <PenTool className="w-6 h-6 md:w-8 md:h-8 text-blue-600" />
+              <span className="hidden md:inline md:text-2xl md:font-bold md:text-gray-900">NoteTaker</span>
             </div>
             <div className="flex items-center space-x-4">
               <span className="text-sm text-gray-600">Welcome, {user?.fullName}</span>
@@ -116,7 +116,7 @@ const DashboardPage = () => {
                 className="flex items-center space-x-2"
               >
                 <LogOut className="w-4 h-4" />
-                <span>Logout</span>
+                <span className="hidden md:inline">Logout</span>
               </Button>
             </div>
           </div>

@@ -97,12 +97,12 @@ const NoteDetailPage = () => {
               <Link to="/dashboard">
                 <Button variant="outline" size="sm" className="flex items-center space-x-2 text-gray-700 hover:text-gray-900 border-gray-300 hover:border-gray-400">
                   <ArrowLeft className="w-4 h-4" />
-                  <span>Back to Dashboard</span>
+                  <span className="hidden md:inline">Back to Dashboard</span>
                 </Button>
               </Link>
               <div className="flex items-center space-x-2">
                 <PenTool className="w-6 h-6 text-blue-600" />
-                <span className="text-xl font-bold text-gray-900">NoteTaker</span>
+                <span className="hidden md:inline text-xl font-bold text-gray-900">NoteTaker</span>
               </div>
             </div>
             <div className="flex items-center space-x-2">
@@ -110,7 +110,7 @@ const NoteDetailPage = () => {
                 <DialogTrigger asChild>
                   <Button variant="outline" size="sm" className="flex items-center space-x-2">
                     <Edit3 className="w-4 h-4" />
-                    <span>Edit</span>
+                    <span className="hidden md:inline">Edit</span>
                   </Button>
                 </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
@@ -157,7 +157,7 @@ const NoteDetailPage = () => {
                 <AlertDialogTrigger asChild>
                   <Button variant="outline" size="sm" className="flex items-center space-x-2 text-red-600 hover:text-red-700">
                     <Trash2 className="w-4 h-4" />
-                    <span>Delete</span>
+                    <span className="hidden md:inline">Delete</span>
                   </Button>
                 </AlertDialogTrigger>
                 <AlertDialogContent>
