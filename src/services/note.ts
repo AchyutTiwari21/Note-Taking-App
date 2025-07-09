@@ -4,7 +4,7 @@ export class NoteService {
 
     async addNote({title, content}: {title: string, content: string}) {
         try {
-            const response = await fetch(`${config.LOCAL_API_URL}/api/v1/note/add-note`, {
+            const response = await fetch(`${config.PRODUCTION_API_URL}/api/v1/note/add-note`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -29,7 +29,7 @@ export class NoteService {
       
     async getNotes() {
         try {
-            const response = await fetch(`${config.LOCAL_API_URL}/api/v1/note/get-notes`, {
+            const response = await fetch(`${config.PRODUCTION_API_URL}/api/v1/note/get-notes`, {
                 method: 'GET',
                 credentials: 'include',
             });
@@ -50,7 +50,7 @@ export class NoteService {
 
     async deleteNote(id: string) {
         try {
-            const response = await fetch(`${config.LOCAL_API_URL}/api/v1/note/delete-note/${id}`, {
+            const response = await fetch(`${config.PRODUCTION_API_URL}/api/v1/note/delete-note/${id}`, {
                 method: 'DELETE',
                 credentials: 'include',
             });
@@ -71,7 +71,7 @@ export class NoteService {
 
     async updateNote({id, title, content}: {id: string, title: string | undefined, content: string | undefined}) {
         try {
-            const response = await fetch(`${config.LOCAL_API_URL}/api/v1/note/update-note/${id}`, {
+            const response = await fetch(`${config.PRODUCTION_API_URL}/api/v1/note/update-note/${id}`, {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {

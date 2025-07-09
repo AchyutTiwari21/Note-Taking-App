@@ -4,7 +4,7 @@ export class AuthService {
 
     async sendOtp(email: string) {
         try {
-            const response = await fetch(`${config.LOCAL_API_URL}/api/v1/user/send-otp`, {
+            const response = await fetch(`${config.PRODUCTION_API_URL}/api/v1/user/send-otp`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -29,7 +29,7 @@ export class AuthService {
 
     async createAccount({fullName, email, otp, dob}: {fullName: string, email: string, otp: string, dob: string}) {
         try {
-            const response = await fetch(`${config.LOCAL_API_URL}/api/v1/user/signup`, {
+            const response = await fetch(`${config.PRODUCTION_API_URL}/api/v1/user/signup`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -55,7 +55,7 @@ export class AuthService {
       
     async login({email, otp}: {email: string, otp: string}) {
         try {
-            const response = await fetch(`${config.LOCAL_API_URL}/api/v1/user/signin`, {
+            const response = await fetch(`${config.PRODUCTION_API_URL}/api/v1/user/signin`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
@@ -80,7 +80,7 @@ export class AuthService {
 
     async logout() {
         try {
-            const response = await fetch(`${config.LOCAL_API_URL}/api/v1/user/signout`, {
+            const response = await fetch(`${config.PRODUCTION_API_URL}/api/v1/user/signout`, {
                 method: 'POST',
                 credentials: 'include'
             });
