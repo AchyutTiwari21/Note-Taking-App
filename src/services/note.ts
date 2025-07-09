@@ -4,13 +4,11 @@ export class NoteService {
 
     async addNote({title, content}: {title: string, content: string}) {
         try {
-            const token = JSON.parse(localStorage.getItem('token') || 'null');
             const response = await fetch(`${config.PRODUCTION_API_URL}/api/v1/note/add-note`, {
                 method: 'POST',
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({title, content})
             });
@@ -31,13 +29,9 @@ export class NoteService {
       
     async getNotes() {
         try {
-            const token = JSON.parse(localStorage.getItem('token') || 'null');
             const response = await fetch(`${config.PRODUCTION_API_URL}/api/v1/note/get-notes`, {
                 method: 'GET',
                 credentials: 'include',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
             });
 
             const data = await response.json();
@@ -56,13 +50,9 @@ export class NoteService {
 
     async deleteNote(id: string) {
         try {
-            const token = JSON.parse(localStorage.getItem('token') || 'null');
             const response = await fetch(`${config.PRODUCTION_API_URL}/api/v1/note/delete-note/${id}`, {
                 method: 'DELETE',
                 credentials: 'include',
-                headers: {
-                    'Authorization': `Bearer ${token}`,
-                },
             });
 
             const data = await response.json();
@@ -81,13 +71,11 @@ export class NoteService {
 
     async updateNote({id, title, content}: {id: string, title: string | undefined, content: string | undefined}) {
         try {
-            const token = JSON.parse(localStorage.getItem('token') || 'null');
             const response = await fetch(`${config.PRODUCTION_API_URL}/api/v1/note/update-note/${id}`, {
                 method: 'PUT',
                 credentials: 'include',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${token}`,
                 },
                 body: JSON.stringify({title, content})
             });
