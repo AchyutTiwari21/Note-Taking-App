@@ -69,6 +69,7 @@ export class AuthService {
             if(!response.ok) {
                 throw new Error(data.message || 'Invalid email or OTP.');
             } else {
+                localStorage.setItem('token', JSON.stringify(data.data.accessToken));
                 return data.data.user;
             }   
 
@@ -80,9 +81,14 @@ export class AuthService {
 
     async logout() {
         try {
+            const token = JSON.parse(localStorage.getItem('token') || 'null');
+
             const response = await fetch(`${config.PRODUCTION_API_URL}/api/v1/user/signout`, {
                 method: 'POST',
-                credentials: 'include'
+                credentials: 'include',
+                headers: {
+                    'Authorization': `Bearer ${token}`,
+                },
             });
 
             const data = await response.json();
