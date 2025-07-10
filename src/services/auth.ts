@@ -2,6 +2,36 @@ import config from "@/config/config";
 
 export class AuthService {
 
+    async getUser() {
+        try {
+            const response = await fetch(`${config.PRODUCTION_API_URL}/api/v1/user/me`, {
+                method: 'GET',
+                credentials: 'include',
+            });
+
+            const data = await response.json();
+
+            if(!response.ok) {
+                throw new Error(data.message || 'Error while fetching notes.');
+            } else {
+                return data.data;
+            }   
+
+        } catch(error: any) {
+            console.log(error.message || 'Error while fetching notes.');
+            throw error;  
+        }
+    }
+
+    signupWithGoogle() {
+        try {
+            window.location.href = `${config.PRODUCTION_API_URL}/api/v1/user/signupWithGoogle`;
+        } catch (error) {
+            console.error('Error while initiating Google signup:', error);
+            throw error;
+        }
+    }
+
     async sendOtp(email: string) {
         try {
             const response = await fetch(`${config.PRODUCTION_API_URL}/api/v1/user/send-otp`, {
@@ -97,6 +127,7 @@ export class AuthService {
             throw error;
         }
     }
+
 }
 
 const authService = new AuthService();

@@ -18,7 +18,7 @@ const SigninPage = () => {
   const [isOTPSent, setIsOTPSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [otpLoading, setOtpLoading] = useState(false);
-  const { login, sendOTP } = useAuth();
+  const { login, sendOTP, signupWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -73,6 +73,20 @@ const SigninPage = () => {
       NProgress.done();
     }
   };
+
+  const handleGoogleSignin = () => {
+    setIsLoading(true);
+    NProgress.start();
+    try {
+      signupWithGoogle();
+      toast.success('Signed In Successfully!');
+    } catch (error: any) {
+      toast.error(error.message || 'SignIn failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+      NProgress.done();
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
@@ -165,7 +179,7 @@ const SigninPage = () => {
           <Button
             variant="outline"
             className="w-full"
-            onClick={() => toast.info('Google signin coming soon!')}
+            onClick={handleGoogleSignin}
           >
             <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
               <path

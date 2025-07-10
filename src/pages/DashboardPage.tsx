@@ -10,47 +10,59 @@ import { PenTool, Plus, Search, LogOut, Edit3, Calendar } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { useNotes, NoteRespone } from '@/context/NotesContext';
 import { toast } from 'sonner';
-import noteService from '@/services/note';
+import authService from '@/services/auth';
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
 
 const DashboardPage = () => {
-  const { user, logout, isAuthenticated } = useAuth();
+  const { user, setUser, logout, isAuthenticated, setIsAuthenticated } = useAuth();
   const { notes, setNotes, addNote } = useNotes();
   const [searchTerm, setSearchTerm] = useState('');
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newNote, setNewNote] = useState({ title: '', content: '' });
+  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!isAuthenticated) {
-      navigate('/signin');
-    }
-  }, [isAuthenticated, navigate]);
-
-  useEffect(() => {
-    NProgress.configure({ showSpinner: false });
-    (async () => {
+    const fetchUser = async () => {
       NProgress.start();
       try {
-        const noteResponse: NoteRespone[] = await noteService.getNotes();
+        const userData = await authService.getUser();
+        if (userData) {
+          const newUser = {
+            _id: userData._id,
+            fullName: userData.fullName,
+            email: userData.email,
+            dob: userData?.dob,
+            avatar: userData?.avatar
+          };
+          setIsAuthenticated(true);
+          localStorage.setItem('user', JSON.stringify(newUser));
+          setUser(newUser);
 
-        if(noteResponse) {
-          const noteData = noteResponse.map(note => {
-            return {...note, preview: note.content.substring(0, 100) + (note.content.length > 100 ? '...' : '')}
-          })
+          const noteData = userData.notes?.map((note: NoteRespone) => ({
+            ...note,
+            preview: note.content.substring(0, 100) + (note.content.length > 100 ? '...' : '')
+          }));
+
           setNotes(noteData);
         }
-      } 
-      catch (error: any) {
-        console.log(error.message || "Error while fetching notes.");
-        throw error;
-      }
-      finally {
+      } catch (error: any) {
+        console.error(error.message || "Error while fetching notes.");
+      } finally {
+        setLoading(false);
         NProgress.done();
       }
-    })();
+    };
+
+    fetchUser();
   }, []);
+
+
+  useEffect(() => {
+    if (!loading && !isAuthenticated)
+      navigate('/signin');
+  }, [isAuthenticated, loading, navigate]);
 
   const handleLogout = async () => {
     NProgress.start();
@@ -88,6 +100,10 @@ const DashboardPage = () => {
   );
 
   if (!isAuthenticated) {
+    return null;
+  }
+
+  if(loading) {
     return null;
   }
 

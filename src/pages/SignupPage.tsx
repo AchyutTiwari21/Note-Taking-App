@@ -20,7 +20,7 @@ const SignupPage = () => {
   const [isOTPSent, setIsOTPSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [otpLoading, setOtpLoading] = useState(false);
-  const { signup, sendOTP } = useAuth();
+  const { signup, sendOTP, signupWithGoogle } = useAuth();
   const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -75,6 +75,20 @@ const SignupPage = () => {
       NProgress.done();
     }
   };
+
+  const handleGoogleSignup = () => {
+    setIsLoading(true);
+    NProgress.start();
+    try {
+      signupWithGoogle();
+      toast.success('Account created successfully!');
+    } catch (error: any) {
+      toast.error(error.message || 'Signup failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+      NProgress.done();
+    }
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 flex items-center justify-center p-4">
@@ -204,7 +218,7 @@ const SignupPage = () => {
           <Button
             variant="outline"
             className="w-full"
-            onClick={() => toast.info('Google signup coming soon!')}
+            onClick={handleGoogleSignup}
           >
             <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
               <path

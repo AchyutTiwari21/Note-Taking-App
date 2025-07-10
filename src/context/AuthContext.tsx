@@ -1,19 +1,23 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, Dispatch, SetStateAction } from 'react';
 import authService from '@/services/auth';
 
 interface User {
   _id: string;
   fullName: string;
   email: string;
-  dob: string;
+  dob?: string;
+  avatar?: string;
 }
 
 interface AuthContextType {
   user: User | null;
+  setUser: Dispatch<SetStateAction<User | null>>;
+  setIsAuthenticated: Dispatch<SetStateAction<boolean>>;
   login: (email: string, otp: string) => Promise<boolean>;
   signup: (fullName: string, email: string, dob: string, otp: string) => Promise<boolean>;
   logout: () => Promise<void>;
   sendOTP: (email: string) => Promise<boolean>;
+  signupWithGoogle: () => void;
   isAuthenticated: boolean;
 }
 
@@ -63,7 +67,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           _id: userData._id,
           fullName: userData.fullName,
           email: userData.email,
-          dob: userData.dob
+          dob: userData.dob,
+          avatar: userData?.avatar
         };
         
         setUser(user);
@@ -87,7 +92,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
           _id: userData._id,
           fullName: userData.fullName,
           email: userData.email,
-          dob: userData.dob
+          dob: userData.dob,
+          avatar: userData?.avatar
         };
         
         setUser(newUser);
@@ -118,14 +124,27 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   };
 
+  const signupWithGoogle = () : void => {
+    try {
+      authService.signupWithGoogle();
+    }
+    catch (error: any) {
+      console.log("Signup failed", error.message);
+      throw new Error(error.message || 'Signup failed');  
+    }
+  }
+
   return (
     <AuthContext.Provider value={{
       user,
+      setUser,
+      signupWithGoogle,
       login,
       signup,
       logout,
       sendOTP,
-      isAuthenticated
+      isAuthenticated,
+      setIsAuthenticated
     }}>
       {children}
     </AuthContext.Provider>
