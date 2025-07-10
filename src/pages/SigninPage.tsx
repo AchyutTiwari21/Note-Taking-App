@@ -79,7 +79,6 @@ const SigninPage = () => {
     NProgress.start();
     try {
       signupWithGoogle();
-      toast.success('Signed In Successfully!');
     } catch (error: any) {
       toast.error(error.message || 'SignIn failed. Please try again.');
     } finally {

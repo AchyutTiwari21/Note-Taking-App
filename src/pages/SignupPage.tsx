@@ -81,7 +81,6 @@ const SignupPage = () => {
     NProgress.start();
     try {
       signupWithGoogle();
-      toast.success('Account created successfully!');
     } catch (error: any) {
       toast.error(error.message || 'Signup failed. Please try again.');
     } finally {
