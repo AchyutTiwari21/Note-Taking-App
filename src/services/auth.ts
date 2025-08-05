@@ -128,6 +128,31 @@ export class AuthService {
         }
     }
 
+    async loginAsGuest({email, fullName}: {email: string, fullName: string}) {
+        try {
+            const response = await fetch(`${config.PRODUCTION_API_URL}/api/v1/user/loginAsGuest`, {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({email, fullName})
+            });
+
+            const data = await response.json();
+
+            if(!response.ok) {
+                throw new Error(data.message || 'Invalid email or fullName.');
+            } else {
+                return data.data.user;
+            }   
+
+        } catch(error) {
+            console.log('Error while logging in.');
+            throw error;  
+        }
+    }
+
 }
 
 const authService = new AuthService();

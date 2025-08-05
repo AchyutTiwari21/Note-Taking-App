@@ -14,6 +14,7 @@ interface AuthContextType {
   setUser: Dispatch<SetStateAction<User | null>>;
   setIsAuthenticated: Dispatch<SetStateAction<boolean>>;
   login: (email: string, otp: string) => Promise<boolean>;
+  loginAsGuest: (email: string, fullName: string) => Promise<boolean>;
   signup: (fullName: string, email: string, dob: string, otp: string) => Promise<boolean>;
   logout: () => Promise<void>;
   sendOTP: (email: string) => Promise<boolean>;
@@ -134,6 +135,31 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     }
   }
 
+  const loginAsGuest = async (email: string, fullName: string): Promise<boolean> => {
+    try {
+      const userData = await authService.loginAsGuest({ email, fullName });
+
+      if (userData) {
+        const guestUser: User = {
+          _id: userData._id,
+          fullName: userData.fullName,
+          email: userData.email,
+          dob: userData?.dob,
+          avatar: userData?.avatar
+        };
+        
+        setUser(guestUser);
+        setIsAuthenticated(true);
+        localStorage.setItem('user', JSON.stringify(guestUser));
+        return true;
+      }
+      return false;
+    } catch (error: any) {
+      console.error("Error logging in as guest:", error.message);
+      throw new Error(error.message || 'Login as guest failed');
+    }
+  };
+
   return (
     <AuthContext.Provider value={{
       user,
@@ -144,7 +170,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
       logout,
       sendOTP,
       isAuthenticated,
-      setIsAuthenticated
+      setIsAuthenticated,
+      loginAsGuest
     }}>
       {children}
     </AuthContext.Provider>

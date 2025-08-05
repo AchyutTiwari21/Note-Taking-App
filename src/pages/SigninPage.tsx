@@ -18,7 +18,7 @@ const SigninPage = () => {
   const [isOTPSent, setIsOTPSent] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [otpLoading, setOtpLoading] = useState(false);
-  const { login, sendOTP, signupWithGoogle } = useAuth();
+  const { login, sendOTP, signupWithGoogle, loginAsGuest } = useAuth();
   const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -79,6 +79,25 @@ const SigninPage = () => {
     NProgress.start();
     try {
       signupWithGoogle();
+    } catch (error: any) {
+      toast.error(error.message || 'SignIn failed. Please try again.');
+    } finally {
+      setIsLoading(false);
+      NProgress.done();
+    }
+  }
+
+  const handleGuestLogin = async () => {
+    setIsLoading(true);
+    NProgress.start();
+    try {
+      const isGuestLogin = await loginAsGuest("guestuser@gmail.com", "Guest User");
+      if (isGuestLogin) {
+        toast.success('Logged in as guest!');
+        navigate('/dashboard');
+      } else {
+        toast.error('Guest login failed. Please try again.');
+      }
     } catch (error: any) {
       toast.error(error.message || 'SignIn failed. Please try again.');
     } finally {
@@ -174,6 +193,17 @@ const SigninPage = () => {
               <span className="bg-white px-2 text-gray-500">Or continue with</span>
             </div>
           </div>
+
+          <Button
+            variant="outline"
+            className='w-full'
+            onClick={handleGuestLogin}
+          >
+            <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
+            </svg>
+            Sign in as Guest
+          </Button>
 
           <Button
             variant="outline"
